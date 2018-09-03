@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  tasks:
+    - name: create /challenge directory
+      file:
+        path: /challenge
+        state: directory
+    
+# RUN A COMMAND THAT GENERATES A 4 DIGIT RANDOM NUMBER AND REGISTERS THE VALUE
+# HINT: USE SHUF    
+    - name: generate 4 digit random number
+      command: shuf -i 1000-9999 -n 10
+      register: randomly_generated_numbers
+    
+# TOUCH A FILE IN /challenge/ THAT IS NAMED THE VALUE OF THE REGISTERED RANDOM
+# NUMBER FROM THE PRIOR TASK
+    - name: touch the file named as the random number
+      file:
+        path: "/challenge/{{ item }}"
+        state: touch
+      with_items: "{{ randomly_generated_numbers.stdout_lines }}"    
